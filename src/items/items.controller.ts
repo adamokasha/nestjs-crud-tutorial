@@ -1,12 +1,24 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+} from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
-import { Request, Response } from 'express';
+import { ItemsService } from './items.service';
+import { Item } from './interfaces/item.interface';
 
 @Controller('items')
 export class ItemsController {
+  // Add injectables here
+  constructor(private readonly itemsService: ItemsService) {}
+
   @Get()
-  findAll(): string {
-    return 'Get All Items';
+  findAll(): Item[] {
+    return this.itemsService.findAll();
   }
 
   @Post()
@@ -15,8 +27,8 @@ export class ItemsController {
   }
 
   @Get(':id')
-  findOne(@Param() param) {
-    return `Item ${param.id}`;
+  findOne(@Param() param): Item {
+    return this.itemsService.findOne(param.id);
   }
 
   @Delete(':id')
